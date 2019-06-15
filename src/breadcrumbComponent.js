@@ -111,7 +111,7 @@ export default {
         routeLabel = breadcrumbLabel
       }
 
-      return routeLabel
+      return typeof routeLabel === 'function' ? routeLabel.call(this, this.$route) : routeLabel
     },
 
     // Function resolves a utils object of the provided route
