@@ -1,6 +1,6 @@
 const utils = {
-  isObject (checkMe) {
-    return typeof checkMe === 'object'&& !Array.isArray(checkMe) && checkMe !== null
+  isObject(checkMe) {
+    return typeof checkMe === 'object' && !Array.isArray(checkMe) && checkMe !== null
   }
 }
 
@@ -27,12 +27,8 @@ export default {
         </template>
       </template>
 
-      <li v-if="!isInitialEmptyRoute" class="current-breadcrumb">
-        <slot name="current" :label="getRouteLabel(currentRoute)">
-          <a>
-            {{getRouteLabel(currentRoute)}}
-          </a>
-        </slot>
+      <li v-if="!isInitialEmptyRoute" class="breadcrumb-item active" :label="getRouteLabel(currentRoute)">
+       {{getRouteLabel(currentRoute)}}
       </li>
     </ul>
   `,
@@ -42,23 +38,23 @@ export default {
       default: 'ul'
     }
   },
-  data () {
+  data() {
     return {
       parentsDynamicRoutes: [],
       parentHelper: ''
     }
   },
   computed: {
-    isInitialEmptyRoute () {
+    isInitialEmptyRoute() {
       return this.$route.fullPath === '/' && !this.$route.matched.length
     },
-    currentRoute () {
+    currentRoute() {
       // This check is just to make sure that '$forceUpdate' would work
       if (!this.isInitialEmptyRoute && (this.parentHelper || !this.parentHelper)) {
         return this.$route
       }
     },
-    parentRoutes () {
+    parentRoutes() {
       if (!this.isInitialEmptyRoute) {
         return this.parentsDynamicRoutes.length
           ? this.parentsDynamicRoutes
@@ -70,7 +66,7 @@ export default {
   // TODO: Write docs for each method
   methods: {
     // Function returns resolved page's breadcrumb property
-    getBreadcrumb (route) {
+    getBreadcrumb(route) {
       let breadcrumb = route.meta.breadcrumb
       const matchedRouteRecord = route.matched[route.matched.length - 1]
       const matchedComponent = matchedRouteRecord.components.default
@@ -96,7 +92,7 @@ export default {
     },
 
     // Function return label from any breadcrumb property
-    getBreadcrumbLabel (breadcrumb) {
+    getBreadcrumbLabel(breadcrumb) {
       if (typeof breadcrumb === 'object') {
         return breadcrumb.label
       }
@@ -106,7 +102,7 @@ export default {
     },
 
     // Function resolves a label of the provided route
-    getRouteLabel (route) {
+    getRouteLabel(route) {
       let routeLabel = route.name
       const breadcrumb = this.getBreadcrumb(route)
       const breadcrumbLabel = this.getBreadcrumbLabel(breadcrumb)
@@ -119,20 +115,20 @@ export default {
     },
 
     // Function resolves a utils object of the provided route
-    getRouteUtils (route) {
+    getRouteUtils(route) {
       const breadcrumb = this.getBreadcrumb(route)
       if (breadcrumb && breadcrumb.utils) {
         return breadcrumb.utils
       }
     },
 
-    resolveRootParentRoute (parentRouteRecord) {
+    resolveRootParentRoute(parentRouteRecord) {
       const parentRoutePath = parentRouteRecord.path || '/'
 
       return this.$router.resolve({path: parentRoutePath}).route
     },
 
-    getRootParentRoute (route) {
+    getRootParentRoute(route) {
       let rootParentRoute
       const matchedRoutes = route.matched
 
@@ -147,7 +143,7 @@ export default {
       return rootParentRoute
     },
 
-    getDirectParentRoute (route) {
+    getDirectParentRoute(route) {
       const breadcrumb = this.getBreadcrumb(route)
 
       if (breadcrumb && breadcrumb.parent) {
@@ -171,7 +167,7 @@ export default {
     },
 
     // Function resolve a parent route if such exist
-    getParentRoute (route) {
+    getParentRoute(route) {
       let parentRoute
       const directParentRoute = this.getDirectParentRoute(route)
 
@@ -187,7 +183,7 @@ export default {
     },
 
     // Function returns array of parents routes
-    getAncestorsRoutesArray (route) {
+    getAncestorsRoutesArray(route) {
       let parentRoutesArray = []
       const parentRoute = this.getParentRoute(route)
 
@@ -206,12 +202,12 @@ export default {
     }
   },
   watch: {
-    '$route' () {
+    '$route'() {
       // Set empty component's 'parentsDynamicRoutes' property on each route change
       this.parentsDynamicRoutes = []
     }
   },
-  created () {
+  created() {
     // Listen to the change of route breadcrumb object
     this.$_vue2Crumbs_eventBUS.$on('breadcrumbChanged', () => {
       const metaBreadcrumb = this.$route.meta.breadcrumb
